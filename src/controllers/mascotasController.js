@@ -117,6 +117,19 @@ export const makeAdopted = async (req, res) => {
   }
 };
 
+
+export const makeEspera = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('UPDATE mascotas SET estado = ? WHERE id = ?', ['4', id]);
+    res.json({ message: 'Mascota ha sido adoptada' });
+  } catch (error) {
+    console.error('Error updating mascota to adopted: ', error);
+    res.status(500).json({ message: 'Error updating mascota', error: error.message });
+  }
+};
+
+
 export const getMascotasSummary = async (req, res) => {
   try {
     const [totalResult] = await pool.query('SELECT COUNT(*) AS total FROM mascotas');
