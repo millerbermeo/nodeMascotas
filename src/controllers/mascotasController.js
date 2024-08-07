@@ -122,7 +122,7 @@ export const makeEspera = async (req, res) => {
   const { id } = req.params;
   try {
     await pool.query('UPDATE mascotas SET estado = ? WHERE id = ?', ['4', id]);
-    res.json({ message: 'Mascota ha sido adoptada' });
+    res.json({ message: 'Mascota ha sido puesta en espera' });
   } catch (error) {
     console.error('Error updating mascota to adopted: ', error);
     res.status(500).json({ message: 'Error updating mascota', error: error.message });

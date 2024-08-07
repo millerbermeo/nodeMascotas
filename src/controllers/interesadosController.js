@@ -15,7 +15,7 @@ export const getInteresados = async (req, res) => {
 export const getInteresado = async (req, res) => {
   const { id } = req.params;
   try {
-    const [rows] = await pool.query('SELECT * FROM interesados WHERE id_interes = ?', [id]);
+    const [rows] = await pool.query('SELECT *, u.nombre, u.correo, u.telefono  FROM interesados i JOIN usuarios ON i.usuario.id = u.id WHERE mascota_id = ?', [id]);
     if (rows.length === 0) {
       return res.status(404).json({ message: 'Interesado not found' });
     }
