@@ -42,7 +42,7 @@ export const createInteresado = async (req, res) => {
     );
 
     if (existingRecord.length > 0) {
-      // Si existe, actualiza el usuario_id
+      // Si existe, actualiza el usuario_id y la fecha_creacion
       await pool.query(
         'UPDATE interesados SET usuario_id = ?, fecha_creacion = ? WHERE mascota_id = ?',
         [usuario_id, fecha_creacion, mascota_id]
@@ -61,6 +61,7 @@ export const createInteresado = async (req, res) => {
     return res.status(500).json({ message: 'Error creating or updating interesado', error: error.message });
   }
 };
+
 
 
 // Actualizar un interesado existente
