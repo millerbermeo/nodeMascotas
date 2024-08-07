@@ -35,16 +35,33 @@ export const createInteresado = async (req, res) => {
   }
 
   try {
-    const [result] = await pool.query(
-      'INSERT INTO interesados (usuario_id, mascota_id, fecha_creacion) VALUES (?, ?, ?)',
-      [usuario_id, mascota_id, fecha_creacion]
+    // Primero, verifica si ya existe un registro con el mismo mascota_id
+    const [existingRecord] = await pool.query(
+      'SELECT * FROM interesados WHERE mascota_id = ?',
+      [mascota_id]
     );
-    res.status(201).json({ message: 'Interesado created', id: result.insertId });
+
+    if (existingRecord.length > 0) {
+      // Si existe, actualiza el usuario_id
+      await pool.query(
+        'UPDATE interesados SET usuario_id = ?, fecha_creacion = ? WHERE mascota_id = ?',
+        [usuario_id, fecha_creacion, mascota_id]
+      );
+      return res.status(200).json({ message: 'Interesado updated' });
+    } else {
+      // Si no existe, crea un nuevo registro
+      const [result] = await pool.query(
+        'INSERT INTO interesados (usuario_id, mascota_id, fecha_creacion) VALUES (?, ?, ?)',
+        [usuario_id, mascota_id, fecha_creacion]
+      );
+      return res.status(201).json({ message: 'Interesado created', id: result.insertId });
+    }
   } catch (error) {
-    console.error('Error creating interesado: ', error);
-    res.status(500).json({ message: 'Error creating interesado', error: error.message });
+    console.error('Error creating or updating interesado: ', error);
+    return res.status(500).json({ message: 'Error creating or updating interesado', error: error.message });
   }
 };
+
 
 // Actualizar un interesado existente
 export const updateInteresado = async (req, res) => {
