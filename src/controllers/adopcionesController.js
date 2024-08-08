@@ -32,7 +32,7 @@ export const getAdopciones = async (req, res) => {
 export const getAdopcion = async (req, res) => {
   const { id } = req.params;
   try {
-    const [rows] = await pool.query('SELECT * FROM adopciones WHERE id = ?', [id]);
+    const [rows] = await pool.query('SELECT a.*, m.nombre, m.edad, m.genero, m.raza, m.esterilizado, m.descripcion, m.imagen_url, m.estado, m.usuario_id FROM adopciones a JOIN mascotas m ON a.mascota_id = m.id WHERE a.usuario_id = ?', [id]);
     if (rows.length === 0) {
       return res.status(404).json({ message: 'Adopcion not found' });
     }
