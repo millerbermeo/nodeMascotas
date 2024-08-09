@@ -67,7 +67,7 @@ export const createUsuario = async (req, res) => {
 
 
 export const updateUsuario = async (req, res) => {
-    const { nombre, correo, identificacion, contraseña, telefono, direccion, rol } = req.body;
+    const { nombre, correo, identificacion, contrasena, telefono, direccion, rol } = req.body;
     const { id } = req.params;
 
     try {
@@ -81,7 +81,7 @@ export const updateUsuario = async (req, res) => {
         const values = [nombre, correo, identificacion, telefono, direccion, rol, id];
 
         // Si se proporciona una contraseña, haz el hash y agrégala a la consulta
-        if (contraseña) {
+        if (contrasena) {
             const hashedPassword = await bcrypt.hash(contraseña, 10);
             query = 'UPDATE usuarios SET nombre = ?, correo = ?, identificacion = ?, contrasena = ?, telefono = ?, direccion = ?, rol = ? WHERE id = ?';
             values.splice(2, 0, hashedPassword); // Insertar la contraseña en la posición correcta
