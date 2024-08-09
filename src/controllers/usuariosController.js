@@ -43,7 +43,7 @@ export const createUsuario = async (req, res) => {
 
 
 export const updateUsuario = async (req, res) => {
-    const { nombre, correo, contraseña, telefono, direccion, rol } = req.body;
+    const { nombre, correo, identificacion, contraseña, telefono, direccion, rol } = req.body;
     const { id } = req.params;
 
     try {
@@ -53,13 +53,13 @@ export const updateUsuario = async (req, res) => {
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
-        let query = 'UPDATE usuarios SET nombre = ?, correo = ?, telefono = ?, direccion = ?, rol = ? WHERE id = ?';
-        const values = [nombre, correo, telefono, direccion, rol || 'usuario', id];
+        let query = 'UPDATE usuarios SET nombre = ?, correo = ?, identificacion = ?, telefono = ?, direccion = ?, rol = ? WHERE id = ?';
+        const values = [nombre, correo, identificacion, telefono, direccion, rol, id];
 
         // Si se proporciona una contraseña, haz el hash y agrégala a la consulta
         if (contraseña) {
             const hashedPassword = await bcrypt.hash(contraseña, 10);
-            query = 'UPDATE usuarios SET nombre = ?, correo = ?, contraseña = ?, telefono = ?, direccion = ?, rol = ? WHERE id = ?';
+            query = 'UPDATE usuarios SET nombre = ?, correo = ?, identificacion = ?, contraseña = ?, telefono = ?, direccion = ?, rol = ? WHERE id = ?';
             values.splice(2, 0, hashedPassword); // Insertar la contraseña en la posición correcta
         }
 
