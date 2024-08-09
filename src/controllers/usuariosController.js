@@ -28,18 +28,42 @@ export const createUsuario = async (req, res) => {
     console.log(req.body); // Log the request body to check received data
 
     try {
+        // Check if the identification already exists
+        const [existingIdentificacion] = await pool.query(
+            'SELECT id FROM usuarios WHERE identificacion = ?',
+            [identificacion]
+        );
+
+        if (existingIdentificacion.length > 0) {
+            return res.status(400).json({ error: 'La identificación ya existe' });
+        }
+
+        // Check if the phone number already exists
+        const [existingTelefono] = await pool.query(
+            'SELECT id FROM usuarios WHERE telefono = ?',
+            [telefono]
+        );
+
+        if (existingTelefono.length > 0) {
+            return res.status(400).json({ error: 'El teléfono ya existe' });
+        }
+
         // Hash the password before saving
         const hashedPassword = await bcrypt.hash(contrasena, 10);
+
+        // Insert the new user into the database
         await pool.query(
             'INSERT INTO usuarios (nombre, identificacion, correo, contrasena, rol, telefono, direccion) VALUES (?, ?, ?, ?, ?, ?, ?)',
             [nombre, identificacion, correo, hashedPassword, rol || 'usuario', telefono, direccion]
         );
+
         res.json({ message: 'Usuario creado' });
     } catch (error) {
         console.error('Error creating user:', error); // Log error details
         res.status(500).json({ error: 'Error al crear el usuario' });
     }
 };
+
 
 
 export const updateUsuario = async (req, res) => {
