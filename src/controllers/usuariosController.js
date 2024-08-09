@@ -35,7 +35,7 @@ export const createUsuario = async (req, res) => {
         );
 
         if (existingIdentificacion.length > 0) {
-            return res.status(400).json({ error: 'La identificación ya existe' });
+           return res.status(400).json({ error: 'La identificación ya existe' });
         }
 
         // Check if the phone number already exists
@@ -83,7 +83,7 @@ export const updateUsuario = async (req, res) => {
         // Si se proporciona una contraseña, haz el hash y agrégala a la consulta
         if (contraseña) {
             const hashedPassword = await bcrypt.hash(contraseña, 10);
-            query = 'UPDATE usuarios SET nombre = ?, correo = ?, identificacion = ?, contraseña = ?, telefono = ?, direccion = ?, rol = ? WHERE id = ?';
+            query = 'UPDATE usuarios SET nombre = ?, correo = ?, identificacion = ?, contrasena = ?, telefono = ?, direccion = ?, rol = ? WHERE id = ?';
             values.splice(2, 0, hashedPassword); // Insertar la contraseña en la posición correcta
         }
 
